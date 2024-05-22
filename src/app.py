@@ -7,8 +7,6 @@ import plotly.express as px
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/Dashboard-Plothy-Dash/main/hcoco1/src/data/grades_over_time.csv')
 
 
-
-
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 server = app.server 

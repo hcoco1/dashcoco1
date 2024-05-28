@@ -6,6 +6,7 @@ import dash_auth
 
 
 
+
 # Load the new dataset
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/Dashboard-Plothy-Dash/main/hcoco1/src/data/grades_over_time.csv')
 

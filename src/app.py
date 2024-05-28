@@ -2,6 +2,19 @@ import pandas as pd
 from dash import Dash, dcc, html, Input, Output, dash_table
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import dash_auth
+
+auth = dash_auth.BasicAuth(
+app,
+{'bugsbunny': 'topsecret'}
+)
+
+
+
+
+
+
+
 
 # Load the new dataset
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/Dashboard-Plothy-Dash/main/hcoco1/src/data/grades_over_time.csv')

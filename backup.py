@@ -35,6 +35,7 @@ server.secret_key = secret_key
 # Set up basic authentication
 auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
 
+
 # Ensure grades are numeric
 for col in df.columns[3:]:
     df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -59,116 +60,14 @@ summary_df = df[
 # Ensure all final grades have no more than two decimal places
 summary_df = summary_df.round(0)
 
-# Translation dictionary
-translations = {
-    'en': {
-        'student': "Student",
-        'grade': "Grade",
-        'subject': "Subject",
-        'exam1': "Exam 1",
-        'exam2': "Exam 2",
-        'exam3': "Exam 3",
-        'average_grade': "Average",
-        'title': "Track Your Kid's Academic Progress",
-        'download_app': "Download the app now!",
-        'student_selection': "Student",
-        'grade_selection': "Grade",
-        'performance_overview': "Performance Overview",
-        'detailed_exam_performance': "Detailed Exam Performance",
-        'performance_over_time': "Performance Over Time",
-        'subject_performance_comparison': "Subject Performance Comparison",
-        'how_it_works': "How It Works",
-        'data_handling': "Data Handling",
-        'authentication': "Authentication",
-        'dynamic_content': "Dynamic Content",
-        'interactive_charts': "Interactive Charts",
-        'conclusion': "Conclusion"
-    },
-    'es': {
-        'student': "Estudiante",
-        'grade': "Grado",
-        'subject': "Materia",
-        'exam1': "Lapso 1",
-        'exam2': "Lapso 2",
-        'exam3': "Lapso 3",
-        'average_grade': "Promedio",
-        'title': "Seguimiento del Progreso Académico de su Hijo",
-        'download_app': "¡Descargue la aplicación ahora!",
-        'student_selection': "Estudiante",
-        'grade_selection': "Grado",
-        'performance_overview': "Resumen de Desempeño",
-        'detailed_exam_performance': "Desempeño Detallado en Exámenes",
-        'performance_over_time': "Desempeño a lo Largo del Tiempo",
-        'subject_performance_comparison': "Comparación de Desempeño por Materia",
-        'how_it_works': "Cómo Funciona",
-        'data_handling': "Manejo de Datos",
-        'authentication': "Autenticación",
-        'dynamic_content': "Contenido Dinámico",
-        'interactive_charts': "Gráficos Interactivos",
-        'conclusion': "Conclusión"
-    }
-}
-
-def get_columns(language):
-    translation = translations[language]
-    columns = [
-        {"name": translation['student'], "id": "Name"},
-        {"name": translation['grade'], "id": "Year"},
-        {"name": "Matemáticas" if language == 'es' else "Mathematics", "id": "Matematicas"},
-        {"name": "Literatura" if language == 'es' else "Literature", "id": "Literatura"},
-        {"name": "Inglés" if language == 'es' else "English", "id": "English"},
-        {"name": "Deporte" if language == 'es' else "Sport", "id": "Deporte"},
-        {"name": "Geografía" if language == 'es' else "Geography", "id": "Geography"},
-        {"name": "Arte" if language == 'es' else "Art", "id": "Art"},
-        {"name": "Biología" if language == 'es' else "Biology", "id": "Biologia"},
-        {"name": "Orientación" if language == 'es' else "Guidance", "id": "Orientacion"},
-        {"name": "Participación" if language == 'es' else "Participation", "id": "Participacion"},
-        {"name": translation['average_grade'], "id": "Grade Average"},
-    ]
-    return columns
-
-def get_exam_columns(language, subject):
-    translation = translations[language]
-    columns = [
-        {"name": translation['student'], "id": "Name"},
-        {"name": translation['grade'], "id": "Year"},
-        {"name": translation['exam1'], "id": f"{subject} Exam 1"},
-        {"name": translation['exam2'], "id": f"{subject} Exam 2"},
-        {"name": translation['exam3'], "id": f"{subject} Exam 3"},
-    ]
-    return columns
-
-
-
-
-# Initialize the Dash app layout
+# Layout of the app
 app.layout = dbc.Container(
     [
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        dcc.Dropdown(
-                            id='language-dropdown',
-                            options=[
-                                {'label': 'English', 'value': 'en'},
-                                {'label': 'Español', 'value': 'es'}
-                            ],
-                            value='en',
-                            clearable=False,
-                            style={"width": "200px"}
-                        ),
-                    ],
-                    width=2,
-                    className="mt-4"
-                ),
-            ],
-        ),
-        dbc.Row(
-            [
-                dbc.Col(
-                    [
-                        html.H5(id='student-label'),
+                        html.H5("Estudiante"),
                         dcc.Dropdown(
                             id="student-dropdown",
                             options=[
@@ -186,7 +85,7 @@ app.layout = dbc.Container(
                 ),
                 dbc.Col(
                     [
-                        html.H5(id='grade-label'),
+                        html.H5("Grado"),
                         dcc.Dropdown(
                             id="year-dropdown",
                             options=[
@@ -239,7 +138,7 @@ app.layout = dbc.Container(
                                 "width": "200px",
                                 "height": "200px",
                                 "display": "flex",
-                                "AlignItems": "center",
+                                "alignItems": "center",
                                 "justifyContent": "center",
                             },
                         )
@@ -256,8 +155,20 @@ app.layout = dbc.Container(
                 dbc.Col(
                     dash_table.DataTable(
                         id="summary-table",
-                        columns=get_columns('en'),  # Initialize with default language
-                        data=summary_df.to_dict('records'),  # Ensure initial data is provided
+                        columns=[
+                            {"name": "Nombre", "id": "Name"},
+                            {"name": "Grado", "id": "Year"},
+                            {"name": "Matematicas", "id": "Matematicas"},
+                            {"name": "Literatura", "id": "Literatura"},
+                            {"name": "English", "id": "English"},
+                            {"name": "Deporte", "id": "Deporte"},
+                            {"name": "Geografia", "id": "Geography"},
+                            {"name": "Arte", "id": "Art"},
+                            {"name": "Biologia", "id": "Biologia"},
+                            {"name": "Orientacion", "id": "Orientacion"},
+                            {"name": "Participacion", "id": "Participacion"},
+                            {"name": "Final Grado", "id": "Grade Average"},
+                        ],
                         style_table={"overflowX": "auto"},
                         style_header={
                             "backgroundColor": "rgb(230, 230, 230)",
@@ -280,7 +191,7 @@ app.layout = dbc.Container(
             [
                 dbc.Col(
                     [
-                        html.H5(id='subject-label'),
+                        html.H5("Materia"),
                         dcc.Dropdown(
                             id="subject-dropdown",
                             options=[
@@ -301,7 +212,13 @@ app.layout = dbc.Container(
                 dbc.Col(
                     dash_table.DataTable(
                         id="exam-table",
-                        columns=get_exam_columns('en', subjects[0]),  # Initialize with default language and first subject
+                        columns=[
+                            {"name": "Nombre", "id": "Name"},
+                            {"name": "Grado", "id": "Year"},
+                            {"name": "Lapso 1", "id": "Exam 1"},
+                            {"name": "Lapso 2", "id": "Exam 2"},
+                            {"name": "Lapso 3", "id": "Exam 3"},
+                        ],
                         style_table={"overflowX": "auto"},
                         style_header={
                             "backgroundColor": "rgb(230, 230, 230)",
@@ -320,42 +237,10 @@ app.layout = dbc.Container(
     style={"max-width": "1200px"},
 )
 
-
-
-
-
-# Callback to update labels and average grade card
-@app.callback(
-    [Output('student-label', 'children'),
-     Output('grade-label', 'children'),
-     Output('subject-label', 'children'),  # Ensure this is included
-     Output('summary-table', 'columns'),
-     Output('average-grade', 'children'),
-     Output('student-image', 'src')],
-    [Input('language-dropdown', 'value'),
-     Input('student-dropdown', 'value')]
-)
-def update_labels_and_card(language, selected_student):
-    translation = translations[language]
-    columns = get_columns(language)  # Dynamically get columns based on language
-    
-    student_df = summary_df[summary_df["Name"] == selected_student]
-    average_grade = student_df["Grade Average"].mean().round(0)
-    image_url = student_df["Image URL"].values[0]
-
-    return (translation['student_selection'],
-            translation['grade_selection'],
-            translation['subject'],  # Include the subject label translation
-            columns,
-            f"{translation['average_grade']}: {int(average_grade)}",
-            image_url)
-
-
-
-
+# Callback to update the summary table
 @app.callback(
     Output("summary-table", "data"),
-    [Input("student-dropdown", "value"), Input("year-dropdown", "value")]
+    [Input("student-dropdown", "value"), Input("year-dropdown", "value")],
 )
 def update_summary_table(selected_student, selected_year):
     filtered_summary_df = summary_df[
@@ -363,20 +248,27 @@ def update_summary_table(selected_student, selected_year):
     ]
     return filtered_summary_df.to_dict("records")
 
-  
+# Callback to update the average grade card and student image
+@app.callback(
+    [Output("average-grade", "children"), Output("student-image", "src")],
+    [Input("student-dropdown", "value")],
+)
+def update_average_grade_and_image(selected_student):
+    student_df = summary_df[summary_df["Name"] == selected_student]
+    average_grade = student_df["Grade Average"].mean().round(0)
+    image_url = student_df["Image URL"].values[0]  # Get the image URL for the student
+    return f" Promedio:{int(average_grade)}", image_url
 
 # Callback to update the exam table
 @app.callback(
-    [Output("exam-table", "columns"),
-     Output("exam-table", "data")],
-    [Input("language-dropdown", "value"),
-     Input("student-dropdown", "value"),
-     Input("year-dropdown", "value"),
-     Input("subject-dropdown", "value")]
+    Output("exam-table", "data"),
+    [
+        Input("student-dropdown", "value"),
+        Input("year-dropdown", "value"),
+        Input("subject-dropdown", "value"),
+    ],
 )
-def update_exam_table(language, selected_student, selected_year, selected_subject):
-    columns = get_exam_columns(language, selected_subject)  # Dynamically get columns based on language and subject
-    
+def update_exam_table(selected_student, selected_year, selected_subject):
     filtered_df = df[(df["Name"] == selected_student) & (df["Year"] == selected_year)]
     exam_df = filtered_df[
         [
@@ -387,9 +279,14 @@ def update_exam_table(language, selected_student, selected_year, selected_subjec
             f"{selected_subject} Exam 3",
         ]
     ]
-    
-    return columns, exam_df.to_dict("records")
-
+    exam_df = exam_df.rename(
+        columns={
+            f"{selected_subject} Exam 1": "Exam 1",
+            f"{selected_subject} Exam 2": "Exam 2",
+            f"{selected_subject} Exam 3": "Exam 3",
+        }
+    )
+    return exam_df.to_dict("records")
 
 # Callback to update the performance over time line chart
 @app.callback(
@@ -398,10 +295,9 @@ def update_exam_table(language, selected_student, selected_year, selected_subjec
         Input("student-dropdown", "value"),
         Input("year-dropdown", "value"),
         Input("subject-dropdown", "value"),
-        Input('language-dropdown', 'value')
     ],
 )
-def update_performance_chart(selected_student, selected_year, selected_subject, language):
+def update_performance_chart(selected_student, selected_year, selected_subject):
     filtered_df = df[(df["Name"] == selected_student) & (df["Year"] == selected_year)]
     exam_grades = filtered_df[
         [
@@ -410,14 +306,13 @@ def update_performance_chart(selected_student, selected_year, selected_subject, 
             f"{selected_subject} Exam 3",
         ]
     ].values.flatten()
-    translation = translations[language]
-    exams = [translation['exam1'], translation['exam2'], translation['exam3']]
+    exams = ["Lapso 1", "Lapso 2", "Lapso 3"]
     chart_data = pd.DataFrame({"Lapso": exams, "Nota": exam_grades})
     fig = px.line(
         chart_data,
         x="Lapso",
         y="Nota",
-        title=f"{translation['subject_performance_comparison']} de {selected_student} en {selected_subject} ({selected_year})",
+        title=f"Notas por Lapso de {selected_student} en {selected_subject} ({selected_year})",
         markers=True,
         line_shape='spline',  # Smooth the lines
     )
@@ -453,9 +348,9 @@ def update_performance_chart(selected_student, selected_year, selected_subject, 
 # Callback to update the subject performance bar chart
 @app.callback(
     Output("subject-performance-chart", "figure"),
-    [Input("student-dropdown", "value"), Input("year-dropdown", "value"), Input('language-dropdown', 'value')],
+    [Input("student-dropdown", "value"), Input("year-dropdown", "value")],
 )
-def update_subject_performance_chart(selected_student, selected_year, language):
+def update_subject_performance_chart(selected_student, selected_year):
     filtered_df = summary_df[
         (summary_df["Name"] == selected_student) & (summary_df["Year"] == selected_year)
     ]
@@ -466,15 +361,14 @@ def update_subject_performance_chart(selected_student, selected_year, language):
         value_name="Grade",
     )
     chart_data["Subject"] = chart_data["Subject"].str.replace(" ", "")
-    translation = translations[language]
     fig = px.bar(
         chart_data,
         x="Subject",
         y="Grade",
-        title=f"{translation['subject_performance_comparison']} de {selected_student} en {selected_year}",
+        title=f"Calificaciones de {selected_student} en {selected_year}",
         color="Subject",
     )
-    fig.update_layout(xaxis_title=translation['subject'], yaxis_title="Grade")
+    fig.update_layout(xaxis_title="Subject", yaxis_title="Grade")
     return fig
 
 # Run the app

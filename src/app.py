@@ -9,6 +9,19 @@ import os
 # Load environment variables from .env file
 load_dotenv()
 
+# Get the secret key and auth credentials from environment variables
+secret_key = os.getenv('SECRET_KEY')
+auth_username = os.getenv('AUTH_USERNAME')
+auth_password = os.getenv('AUTH_PASSWORD')
+
+# Ensure the secret key is loaded correctly
+if not secret_key:
+    raise ValueError("No SECRET_KEY set for Flask application. Did you follow the instructions to set up the .env file?")
+
+# Ensure auth credentials are loaded correctly
+if not auth_username or not auth_password:
+    raise ValueError("Authentication credentials are not set properly in the .env file.")
+
 # Load the new dataset
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/grades_over_time%20(1).csv')
 
@@ -17,13 +30,11 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 # Set the secret key for session management
-secret_key = os.getenv('SECRET_KEY')
-auth_username = os.getenv('AUTH_USERNAME')
-auth_password = os.getenv('AUTH_PASSWORD')
-
+server.secret_key = secret_key
 
 # Set up basic authentication
 auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
+
 
 # Ensure grades are numeric
 for col in df.columns[3:]:

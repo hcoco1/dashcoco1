@@ -24,6 +24,7 @@ if not secret_key:
 # Ensure auth credentials are loaded correctly
 if not auth_username or not auth_password:
     raise ValueError("Authentication credentials are not set properly in the .env file.")
+"""
 
 # Create the initial DataFrame with the provided data
 data = [
@@ -63,7 +64,8 @@ columns = ["Name", "Image URL", "Year", "Matematicas Exam 1", "Matematicas Exam 
            "Art Exam 1", "Art Exam 2", "Art Exam 3", "Biologia Exam 1", "Biologia Exam 2", "Biologia Exam 3",
            "Orientacion Exam 1", "Orientacion Exam 2", "Orientacion Exam 3", "Participacion Exam 1", "Participacion Exam 2", "Participacion Exam 3"]
 
-""" df = pd.DataFrame(data, columns=columns) """
+ df = pd.DataFrame(data, columns=columns) """
+ 
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/data/grades_over_time%20.csv')
 """ df = pd.read_csv('grades_over_time.csv')  """
 

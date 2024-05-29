@@ -5,7 +5,7 @@ import plotly.express as px
 import dash_auth
 
 # Load the new dataset
-df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/Dashboard-Plothy-Dash/main/hcoco1/src/data/grades_over_time.csv')
+df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/grades_over_time%20(1).csv')
 
 # Initialize the Dash app
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])

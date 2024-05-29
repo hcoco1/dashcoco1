@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from dash import Dash, Input, Output, dash_table, html, dcc
 import dash_bootstrap_components as dbc
 import plotly.express as px
@@ -23,47 +22,10 @@ if not secret_key:
 if not auth_username or not auth_password:
     raise ValueError("Authentication credentials are not set properly in the .env file.")
 
-# Create the initial DataFrame with the provided data
-data = [
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "K", 8, 15, 7, 14, 10, 11, 19, 5, 9, 2, 18, 14, 6, 8, 13, 10, 12, 11, 4, 17, 9, 20, 18, 12, 15, 3, 7],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "1st", 10, 12, 8, 16, 11, 13, 17, 4, 8, 1, 20, 15, 7, 9, 12, 11, 13, 10, 5, 18, 8, 19, 17, 11, 14, 2, 6],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "2nd", 9, 14, 6, 15, 12, 10, 18, 7, 6, 3, 19, 17, 8, 10, 13, 9, 11, 12, 6, 16, 9, 18, 15, 13, 11, 4, 5],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "3rd", 11, 13, 9, 17, 10, 14, 16, 5, 7, 2, 18, 16, 9, 8, 12, 10, 14, 11, 7, 15, 10, 19, 14, 12, 13, 3, 8],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "4th", 12, 10, 8, 18, 13, 11, 19, 6, 10, 4, 17, 15, 7, 9, 11, 13, 12, 10, 6, 16, 11, 20, 16, 14, 15, 5, 4],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "5th", 8, 15, 7, 14, 10, 11, 19, 5, 9, 2, 18, 14, 6, 8, 13, 10, 12, 11, 4, 17, 9, 20, 18, 12, 15, 3, 7],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "6th", 11, 20, 16, 9, 7, 19, 8, 12, 18, 13, 6, 3, 17, 15, 14, 5, 10, 2, 4, 19, 17, 20, 18, 12, 15, 3, 7],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "7th", 12, 8, 11, 17, 5, 6, 19, 10, 9, 15, 20, 14, 13, 7, 8, 6, 2, 18, 12, 10, 7, 16, 5, 14, 3, 12, 5],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "8th", 14, 17, 10, 19, 8, 9, 16, 11, 14, 18, 7, 6, 12, 13, 15, 20, 3, 9, 11, 10, 13, 7, 16, 8, 4, 5, 19],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "9th", 9, 12, 6, 8, 14, 7, 16, 19, 11, 5, 13, 18, 20, 3, 9, 12, 11, 8, 15, 10, 14, 2, 4, 7, 10, 16, 15],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "10th", 10, 13, 15, 8, 12, 14, 16, 7, 10, 5, 9, 14, 17, 6, 11, 13, 9, 18, 15, 12, 6, 10, 14, 13, 8, 17, 9],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "11th", 11, 14, 16, 9, 13, 15, 17, 8, 11, 6, 10, 15, 18, 7, 12, 14, 10, 19, 16, 13, 7, 11, 15, 14, 9, 18, 10],
-    ["John Doe", "https://github.com/hcoco1/dashcoco1/blob/main/john_doe.jpg?raw=true", "12th", 15, 19, 12, 18, 16, 14, 20, 9, 13, 6, 17, 16, 11, 10, 18, 14, 13, 15, 8, 17, 10, 20, 19, 13, 15, 7, 12],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "K", 13, 6, 18, 12, 15, 10, 9, 7, 14, 19, 11, 16, 5, 8, 20, 18, 12, 15, 10, 13, 3, 2, 6, 11, 17, 9, 14],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "1st", 12, 15, 17, 10, 14, 16, 18, 9, 12, 7, 11, 16, 19, 8, 13, 15, 11, 20, 17, 14, 8, 12, 16, 15, 10, 19, 11],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "2nd", 11, 14, 16, 9, 13, 15, 17, 8, 11, 6, 10, 15, 18, 7, 12, 14, 10, 19, 16, 13, 7, 11, 15, 14, 9, 18, 10],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "3rd", 10, 13, 15, 8, 12, 14, 16, 7, 10, 5, 9, 14, 17, 6, 11, 13, 9, 18, 15, 12, 6, 10, 14, 13, 8, 17, 9],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "4th", 9, 12, 6, 8, 14, 7, 16, 19, 11, 5, 13, 18, 20, 3, 9, 12, 11, 8, 15, 10, 14, 2, 4, 7, 10, 16, 15],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "5th", 13, 6, 18, 12, 15, 10, 9, 7, 14, 19, 11, 16, 5, 8, 20, 18, 12, 15, 10, 13, 3, 2, 6, 11, 17, 9, 14],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "6th", 14, 17, 10, 19, 8, 9, 16, 11, 14, 18, 7, 6, 12, 13, 15, 20, 3, 9, 11, 10, 13, 7, 16, 8, 4, 5, 19],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "7th", 9, 12, 6, 8, 14, 7, 16, 19, 11, 5, 13, 18, 20, 3, 9, 12, 11, 8, 15, 10, 14, 2, 4, 7, 10, 16, 15],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "8th", 10, 13, 15, 8, 12, 14, 16, 7, 10, 5, 9, 14, 17, 6, 11, 13, 9, 18, 15, 12, 6, 10, 14, 13, 8, 17, 9],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "9th", 11, 14, 16, 9, 13, 15, 17, 8, 11, 6, 10, 15, 18, 7, 12, 14, 10, 19, 16, 13, 7, 11, 15, 14, 9, 18, 10],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "10th", 12, 15, 17, 10, 14, 16, 18, 9, 12, 7, 11, 16, 19, 8, 13, 15, 11, 20, 17, 14, 8, 12, 16, 15, 10, 19, 11],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "11th", 13, 6, 18, 12, 15, 10, 9, 7, 14, 19, 11, 16, 5, 8, 20, 18, 12, 15, 10, 13, 3, 2, 6, 11, 17, 9, 14],
-    ["Jane Doe", "https://github.com/hcoco1/dashcoco1/blob/main/jane_doe.jpg?raw=true", "12th", 14, 17, 10, 19, 8, 9, 16, 11, 14, 18, 7, 6, 12, 13, 15, 20, 3, 9, 11, 10, 13, 7, 16, 8, 4, 5, 19]
-]
+# Load the new dataset
+df = pd.read_csv('grades_over_time (1).csv')
 
-
-# Create DataFrame from data
-columns = ["Name", "Image URL", "Year", "Matematicas Exam 1", "Matematicas Exam 2", "Matematicas Exam 3",
-           "Literatura Exam 1", "Literatura Exam 2", "Literatura Exam 3", "English Exam 1", "English Exam 2", "English Exam 3",
-           "Deporte Exam 1", "Deporte Exam 2", "Deporte Exam 3", "Geography Exam 1", "Geography Exam 2", "Geography Exam 3",
-           "Art Exam 1", "Art Exam 2", "Art Exam 3", "Biologia Exam 1", "Biologia Exam 2", "Biologia Exam 3",
-           "Orientacion Exam 1", "Orientacion Exam 2", "Orientacion Exam 3", "Participacion Exam 1", "Participacion Exam 2", "Participacion Exam 3"]
-
-df = pd.DataFrame(data, columns=columns)
-""" df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/grades_over_time%20(1).csv') """
-
+# Initialize the Dash app
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
@@ -72,25 +34,6 @@ server.secret_key = secret_key
 
 # Set up basic authentication
 auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
-
-# List of all possible years/grades
-all_years = ["K", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"]
-
-# Function to fill missing years with placeholder data
-def fill_missing_years(df, all_years):
-    students = df["Name"].unique()
-    placeholder_data = []
-    for student in students:
-        student_data = df[df["Name"] == student]
-        existing_years = student_data["Year"].tolist()
-        for year in all_years:
-            if year not in existing_years:
-                placeholder_data.append([student, student_data["Image URL"].iloc[0], year] + [np.nan]*27)
-    placeholder_df = pd.DataFrame(placeholder_data, columns=df.columns)
-    return pd.concat([df, placeholder_df], ignore_index=True).sort_values(by=["Name", "Year"])
-
-# Fill missing years
-df = fill_missing_years(df, all_years)
 
 # Ensure grades are numeric
 for col in df.columns[3:]:

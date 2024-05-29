@@ -163,6 +163,8 @@ translations = {
         'subject_performance_comparison': "Subject Performance Comparison",
         'how_it_works': "How It Works",
         'data_handling': "Data Handling",
+        'grading_scale' : "Grading Scale: 0-20",
+        'student_performance_dashboard': "Student Performance Dashboard",
         'authentication': "Authentication",
         'dynamic_content': "Dynamic Content",
         'interactive_charts': "Interactive Charts",
@@ -202,6 +204,8 @@ translations = {
         'performance_over_time': "Desempeño a lo Largo del Tiempo",
         'subject_performance_comparison': "Comparación de Desempeño por Materia",
         'how_it_works': "Cómo Funciona",
+        'student_performance_dashboard': "Panel de Rendimiento Estudiantil",
+        'grading_scale' : "Escala de Notas: 0-20",
         'data_handling': "Manejo de Datos",
         'authentication': "Autenticación",
         'dynamic_content': "Contenido Dinámico",
@@ -258,7 +262,8 @@ def get_exam_columns(language, subject):
 
 # Initialize the Dash app layout
 app.layout = dbc.Container(
-    [
+    [   html.H3(id='dashboard-title', children="Student Performance Dashboard"),
+        html.H4(id='grading-scale', children="Grading Scale: 0-20"),
         dbc.Row(
             [
                 dbc.Col(
@@ -448,6 +453,8 @@ def update_year_dropdown(language):
 # Callback to update labels and average grade card
 @app.callback(
     [Output('student-label', 'children'),
+     Output('dashboard-title', 'children'),
+     Output('grading-scale', 'children'),
      Output('grade-label', 'children'),
      Output('subject-label', 'children'),
      Output('summary-table', 'columns'),
@@ -465,6 +472,8 @@ def update_labels_and_card(language, selected_student):
     image_url = student_df["Image URL"].values[0]
 
     return (translation['student_selection'],
+            translation['student_performance_dashboard'],
+            translation['grading_scale'],
             translation['grade_selection'],
             translation['subject'],
             columns,

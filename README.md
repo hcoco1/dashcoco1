@@ -1,15 +1,9 @@
-# High School Students' Grades Dashboard
+# Student Performance Dashboard
 
 This project creates an interactive dashboard to visualize and analyze the grades of high school students over time. The dashboard is built using Python, Dash, and Plotly, with Bootstrap for styling.
 
-## Features
-
-- **Student Selection**: Choose a student from a dropdown to view their grades.
-- **Year Selection**: Filter grades by academic year.
-- **Subject Performance**: View performance in different subjects.
-- **Grade Average**: See the average grade for each student.
-- **Detailed Exam Scores**: Examine scores for individual exams.
-- **Performance Over Time**: Visualize performance trends across multiple exams.
+### Blog Post and App Details
+https://www.hcoco1.com/blog/2024-05-29-dashboard
 
 ## Installation
 
@@ -92,8 +86,8 @@ In summary, while `BasicAuth` offers a straightforward and easy-to-implement sol
 
 ### Dash Docs
 
-https://dash.plotly.com/authentication
+`https://dash.plotly.com/authentication`
 
 ### GitHub Plotly
 
-https://github.com/plotly/dash-auth
+`https://github.com/plotly/dash-auth`

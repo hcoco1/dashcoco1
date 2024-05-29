@@ -10,6 +10,8 @@ import os
 # Load environment variables from .env file
 load_dotenv()
 
+
+
 # Get the secret key and auth credentials from environment variables
 secret_key = os.getenv('SECRET_KEY')
 auth_username = os.getenv('AUTH_USERNAME')
@@ -72,6 +74,28 @@ server.secret_key = secret_key
 
 # Set up basic authentication
 auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
+
+# Specify custom favicon and custom title
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>My Dashboard</title>
+        <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+        {%css%}
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
 
 # List of all possible years/grades
 all_years = ["K", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"]

@@ -548,6 +548,29 @@ def update_performance_chart(selected_student, selected_year, selected_subject, 
         line_shape='spline',  # Smooth the lines
     )
     
+        # Customize line color and style
+    fig.update_traces(line=dict(color='black', width=4), marker=dict(symbol='x', size=10, color='red'))
+    
+    fig.add_shape(
+        type="line",
+        x0=0, x1=1, y0=10, y1=10,
+        line=dict(color="Red", width=1, dash="dash"),
+        xref="paper", yref="y"
+    )
+    
+    fig.add_shape(
+        type="line",
+        x0=0, x1=1, y0=15, y1=15,
+        line=dict(color="blue", width=1, dash="dash"),
+        xref="paper", yref="y"
+    )
+        
+    fig.add_shape(
+        type="line",
+        x0=0, x1=1, y0=18, y1=18,
+        line=dict(color="green", width=1, dash="dash"),
+        xref="paper", yref="y"
+    )
     return fig
 
 # Callback to update the subject performance bar chart

@@ -3,6 +3,11 @@ from dash import Dash, Input, Output, dash_table, html, dcc
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import dash_auth
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Load the new dataset
 df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/grades_over_time%20(1).csv')
@@ -12,10 +17,13 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 # Set the secret key for session management
-server.secret_key = 'supersecretkey'  # Replace with a strong secret key
+secret_key = os.getenv('SECRET_KEY')
+auth_username = os.getenv('AUTH_USERNAME')
+auth_password = os.getenv('AUTH_PASSWORD')
+
 
 # Set up basic authentication
-auth = dash_auth.BasicAuth(app, {'bugsbunny': 'topsecret'})
+auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
 
 # Ensure grades are numeric
 for col in df.columns[3:]:

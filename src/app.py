@@ -11,19 +11,22 @@ import os
 load_dotenv()
 
 
-
 # Get the secret key and auth credentials from environment variables
-secret_key = os.getenv('SECRET_KEY')
-auth_username = os.getenv('AUTH_USERNAME')
-auth_password = os.getenv('AUTH_PASSWORD')
+secret_key = os.getenv("SECRET_KEY")
+auth_username = os.getenv("AUTH_USERNAME")
+auth_password = os.getenv("AUTH_PASSWORD")
 
 # Ensure the secret key is loaded correctly
 if not secret_key:
-    raise ValueError("No SECRET_KEY set for Flask application. Did you follow the instructions to set up the .env file?")
+    raise ValueError(
+        "No SECRET_KEY set for Flask application. Did you follow the instructions to set up the .env file?"
+    )
 
 # Ensure auth credentials are loaded correctly
 if not auth_username or not auth_password:
-    raise ValueError("Authentication credentials are not set properly in the .env file.")
+    raise ValueError(
+        "Authentication credentials are not set properly in the .env file."
+    )
 """
 
 # Create the initial DataFrame with the provided data
@@ -65,8 +68,10 @@ columns = ["Name", "Image URL", "Year", "Matematicas Exam 1", "Matematicas Exam 
            "Orientacion Exam 1", "Orientacion Exam 2", "Orientacion Exam 3", "Participacion Exam 1", "Participacion Exam 2", "Participacion Exam 3"]
 
  df = pd.DataFrame(data, columns=columns) """
- 
-df = pd.read_csv('https://raw.githubusercontent.com/hcoco1/dashcoco1/main/data/grades_over_time%20.csv')
+
+df = pd.read_csv(
+    "https://raw.githubusercontent.com/hcoco1/dashcoco1/main/data/grades_over_time%20.csv"
+)
 """ df = pd.read_csv('grades_over_time.csv')  """
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -79,7 +84,7 @@ server.secret_key = secret_key
 auth = dash_auth.BasicAuth(app, {auth_username: auth_password})
 
 # Specify custom favicon and custom title
-app.index_string = '''
+app.index_string = """
 <!DOCTYPE html>
 <html>
     <head>
@@ -98,10 +103,25 @@ app.index_string = '''
         </footer>
     </body>
 </html>
-'''
+"""
 
 # List of all possible years/grades
-all_years = ["K", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"]
+all_years = [
+    "K",
+    "1st",
+    "2nd",
+    "3rd",
+    "4th",
+    "5th",
+    "6th",
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+    "11th",
+    "12th",
+]
+
 
 # Function to fill missing years with placeholder data
 def fill_missing_years(df, all_years):
@@ -112,9 +132,14 @@ def fill_missing_years(df, all_years):
         existing_years = student_data["Year"].tolist()
         for year in all_years:
             if year not in existing_years:
-                placeholder_data.append([student, student_data["Image URL"].iloc[0], year] + [np.nan]*27)
+                placeholder_data.append(
+                    [student, student_data["Image URL"].iloc[0], year] + [np.nan] * 27
+                )
     placeholder_df = pd.DataFrame(placeholder_data, columns=df.columns)
-    return pd.concat([df, placeholder_df], ignore_index=True).sort_values(by=["Name", "Year"])
+    return pd.concat([df, placeholder_df], ignore_index=True).sort_values(
+        by=["Name", "Year"]
+    )
+
 
 # Fill missing years
 df = fill_missing_years(df, all_years)
@@ -124,11 +149,23 @@ for col in df.columns[3:]:
     df[col] = pd.to_numeric(df[col], errors="coerce")
 
 # Calculate final grades by averaging sublevels
-subjects = ["Matematicas", "Literatura", "English", "Deporte", "Geography", "Art", "Biologia", "Orientacion", "Participacion"]
+subjects = [
+    "Matematicas",
+    "Literatura",
+    "English",
+    "Deporte",
+    "Geography",
+    "Art",
+    "Biologia",
+    "Orientacion",
+    "Participacion",
+]
 for subject in subjects:
-    df[f"{subject}"] = df[
-        [f"{subject} Exam 1", f"{subject} Exam 2", f"{subject} Exam 3"]
-    ].mean(axis=1).round(0)
+    df[f"{subject}"] = (
+        df[[f"{subject} Exam 1", f"{subject} Exam 2", f"{subject} Exam 3"]]
+        .mean(axis=1)
+        .round(0)
+    )
 
 # Calculate the final grade average across all subjects
 df["Grade Average"] = df[[f"{subject}" for subject in subjects]].mean(axis=1).round(0)
@@ -145,150 +182,173 @@ summary_df = summary_df.round(0)
 
 # Translation dictionary
 translations = {
-    'en': {
-        'student': "Student",
-        'grade': "Grade",
-        'subject': "Subject",
-        'exam1': "Exam 1",
-        'exam2': "Exam 2",
-        'exam3': "Exam 3",
-        'average_grade': "Average",
-        'title': "Track Your Kid's Academic Progress",
-        'download_app': "Download the app now!",
-        'student_selection': "Student",
-        'grade_selection': "Grade",
-        'performance_overview': "Performance Overview",
-        'detailed_exam_performance': "Detailed Exam Performance",
-        'performance_over_time': "Performance Over Time",
-        'subject_performance_comparison': "Subject Performance Comparison",
-        'how_it_works': "How It Works",
-        'data_handling': "Data Handling",
-        'grading_scale' : "Grading Scale: 0-20",
-        'student_performance_dashboard': "Student Performance Dashboard",
-        'authentication': "Authentication",
-        'dynamic_content': "Dynamic Content",
-        'interactive_charts': "Interactive Charts",
-        'conclusion': "Conclusion",
-        'of': "of",
-        'in': "in",
-        'grades': {
-            'K': "Kindergarten",
-            '1st': "1st",
-            '2nd': "2nd",
-            '3rd': "3rd",
-            '4th': "4th",
-            '5th': "5th",
-            '6th': "6th",
-            '7th': "7th",
-            '8th': "8th",
-            '9th': "9th",
-            '10th': "10th",
-            '11th': "11th",
-            '12th': "12th"
-        }
+    "en": {
+        "student": "Student",
+        "grade": "Grade",
+        "subject": "Subject",
+        "exam1": "Exam 1",
+        "exam2": "Exam 2",
+        "exam3": "Exam 3",
+        "average_grade": "Average",
+        "title": "Track Your Kid's Academic Progress",
+        "download_app": "Download the app now!",
+        "student_selection": "Student",
+        "grade_selection": "Grade",
+        "performance_overview": "Performance Overview",
+        "detailed_exam_performance": "Detailed Exam Performance",
+        "performance_over_time": "Performance Over Time",
+        "subject_performance_comparison": "Subject Performance Comparison",
+        "how_it_works": "How It Works",
+        "data_handling": "Data Handling",
+        "grading_scale": "Grading Scale: 0-20",
+        "student_performance_dashboard": "Student Performance Dashboard",
+        "authentication": "Authentication",
+        "dynamic_content": "Dynamic Content",
+        "interactive_charts": "Interactive Charts",
+        "conclusion": "Conclusion",
+        "of": "of",
+        "in": "in",
+        "grades": {
+            "K": "Kindergarten",
+            "1st": "1st",
+            "2nd": "2nd",
+            "3rd": "3rd",
+            "4th": "4th",
+            "5th": "5th",
+            "6th": "6th",
+            "7th": "7th",
+            "8th": "8th",
+            "9th": "9th",
+            "10th": "10th",
+            "11th": "11th",
+            "12th": "12th",
+        },
     },
-    'es': {
-        'student': "Estudiante",
-        'grade': "Grado",
-        'subject': "Materia",
-        'exam1': "Lapso 1",
-        'exam2': "Lapso 2",
-        'exam3': "Lapso 3",
-        'average_grade': "Promedio",
-        'title': "Seguimiento del Progreso Académico de su Hijo",
-        'download_app': "¡Descargue la aplicación ahora!",
-        'student_selection': "Estudiante",
-        'grade_selection': "Grado",
-        'performance_overview': "Resumen de Desempeño",
-        'detailed_exam_performance': "Desempeño Detallado en Exámenes",
-        'performance_over_time': "Desempeño a lo Largo del Tiempo",
-        'subject_performance_comparison': "Comparación de Desempeño por Materia",
-        'how_it_works': "Cómo Funciona",
-        'student_performance_dashboard': "Panel de Rendimiento Estudiantil",
-        'grading_scale' : "Escala de Notas: 0-20",
-        'data_handling': "Manejo de Datos",
-        'authentication': "Autenticación",
-        'dynamic_content': "Contenido Dinámico",
-        'interactive_charts': "Gráficos Interactivos",
-        'conclusion': "Conclusión",
-        'of': "de",
-        'in': "en",
-        'grades': {
-            'K': "Kinder",
-            '1st': "1ro",
-            '2nd': "2do",
-            '3rd': "3ro",
-            '4th': "4to",
-            '5th': "5to",
-            '6th': "6to",
-            '7th': "7mo",
-            '8th': "8vo",
-            '9th': "9no",
-            '10th': "10mo",
-            '11th': "11vo",
-            '12th': "12vo"
-        }
-    }
+    "es": {
+        "student": "Estudiante",
+        "grade": "Grado",
+        "subject": "Materia",
+        "exam1": "Lapso 1",
+        "exam2": "Lapso 2",
+        "exam3": "Lapso 3",
+        "average_grade": "Promedio",
+        "title": "Seguimiento del Progreso Académico de su Hijo",
+        "download_app": "¡Descargue la aplicación ahora!",
+        "student_selection": "Estudiante",
+        "grade_selection": "Grado",
+        "performance_overview": "Resumen de Desempeño",
+        "detailed_exam_performance": "Desempeño Detallado en Exámenes",
+        "performance_over_time": "Desempeño a lo Largo del Tiempo",
+        "subject_performance_comparison": "Comparación de Desempeño por Materia",
+        "how_it_works": "Cómo Funciona",
+        "student_performance_dashboard": "Panel de Rendimiento Estudiantil",
+        "grading_scale": "Escala de Notas: 0-20",
+        "data_handling": "Manejo de Datos",
+        "authentication": "Autenticación",
+        "dynamic_content": "Contenido Dinámico",
+        "interactive_charts": "Gráficos Interactivos",
+        "conclusion": "Conclusión",
+        "of": "de",
+        "in": "en",
+        "grades": {
+            "K": "Kinder",
+            "1st": "1ro",
+            "2nd": "2do",
+            "3rd": "3ro",
+            "4th": "4to",
+            "5th": "5to",
+            "6th": "6to",
+            "7th": "7mo",
+            "8th": "8vo",
+            "9th": "9no",
+            "10th": "10mo",
+            "11th": "11vo",
+            "12th": "12vo",
+        },
+    },
 }
+
 
 def get_columns(language):
     translation = translations[language]
     columns = [
-        {"name": translation['student'], "id": "Name"},
-        {"name": translation['grade'], "id": "Year"},
-        {"name": "Matemáticas" if language == 'es' else "Mathematics", "id": "Matematicas"},
-        {"name": "Literatura" if language == 'es' else "Literature", "id": "Literatura"},
-        {"name": "Inglés" if language == 'es' else "English", "id": "English"},
-        {"name": "Deporte" if language == 'es' else "Sport", "id": "Deporte"},
-        {"name": "Geografía" if language == 'es' else "Geography", "id": "Geography"},
-        {"name": "Arte" if language == 'es' else "Art", "id": "Art"},
-        {"name": "Biología" if language == 'es' else "Biology", "id": "Biologia"},
-        {"name": "Orientación" if language == 'es' else "Guidance", "id": "Orientacion"},
-        {"name": "Participación" if language == 'es' else "Participation", "id": "Participacion"},
-        {"name": translation['average_grade'], "id": "Grade Average"},
+        {"name": translation["student"], "id": "Name"},
+        {"name": translation["grade"], "id": "Year"},
+        {
+            "name": "Matemáticas" if language == "es" else "Mathematics",
+            "id": "Matematicas",
+        },
+        {
+            "name": "Literatura" if language == "es" else "Literature",
+            "id": "Literatura",
+        },
+        {"name": "Inglés" if language == "es" else "English", "id": "English"},
+        {"name": "Deporte" if language == "es" else "Sport", "id": "Deporte"},
+        {"name": "Geografía" if language == "es" else "Geography", "id": "Geography"},
+        {"name": "Arte" if language == "es" else "Art", "id": "Art"},
+        {"name": "Biología" if language == "es" else "Biology", "id": "Biologia"},
+        {
+            "name": "Orientación" if language == "es" else "Guidance",
+            "id": "Orientacion",
+        },
+        {
+            "name": "Participación" if language == "es" else "Participation",
+            "id": "Participacion",
+        },
+        {"name": translation["average_grade"], "id": "Grade Average"},
     ]
     return columns
+
 
 def get_exam_columns(language, subject):
     translation = translations[language]
     columns = [
-        {"name": translation['student'], "id": "Name"},
-        {"name": translation['grade'], "id": "Year"},
-        {"name": translation['exam1'], "id": f"{subject} Exam 1"},
-        {"name": translation['exam2'], "id": f"{subject} Exam 2"},
-        {"name": translation['exam3'], "id": f"{subject} Exam 3"},
+        {"name": translation["student"], "id": "Name"},
+        {"name": translation["grade"], "id": "Year"},
+        {"name": translation["exam1"], "id": f"{subject} Exam 1"},
+        {"name": translation["exam2"], "id": f"{subject} Exam 2"},
+        {"name": translation["exam3"], "id": f"{subject} Exam 3"},
     ]
     return columns
 
+
 # Initialize the Dash app layout
 app.layout = dbc.Container(
-    [   html.H3(id='dashboard-title', children="Student Performance Dashboard"),
-        html.H4(id='grading-scale', children="Grading Scale: 0-20"),
+    [
         dbc.Row(
             [
                 dbc.Col(
-                    [
-                        dcc.Dropdown(
-                            id='language-dropdown',
-                            options=[
-                                {'label': 'English', 'value': 'en'},
-                                {'label': 'Español', 'value': 'es'}
-                            ],
-                            value='en',
-                            clearable=False,
-                            style={"width": "200px"}
-                        ),
-                    ],
-                    width=2,
-                    className="mt-4"
-                ),
-            ],
+                    html.H3(id='dashboard-title', children="Student Performance Dashboard"),
+                    width={"size": 6, "offset": 3},
+                    className="text-center mt-4"
+                )
+            ]
         ),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        html.H5(id='student-label'),
+                        html.H5("Language"),
+                        dcc.Dropdown(
+                            id="language-dropdown",
+                            options=[
+                                {"label": "English", "value": "en"},
+                                {"label": "Español", "value": "es"},
+                            ],
+                            value="en",
+                            clearable=False,
+                            style={"width": "100%"},
+                        ),
+                    ],
+                    xs=12,
+                    sm=4,
+                    md=4,
+                    lg=2,
+                    className="mt-4",
+                ),
+                dbc.Col(
+                    [
+                        html.H5(id="student-label"),
                         dcc.Dropdown(
                             id="student-dropdown",
                             options=[
@@ -297,79 +357,81 @@ app.layout = dbc.Container(
                             ],
                             value=df["Name"].unique()[0],
                             clearable=False,
-                            style={"width": "200px"}
+                            style={"width": "100%"},
                         ),
                     ],
-                    width=2,
-                    style={"margin-bottom": "10px", "margin-right":"10px"},
-                    className="mt-4"
+                    xs=12,
+                    sm=4,
+                    md=4,
+                    lg=2,
+                    className="mt-4",
                 ),
                 dbc.Col(
                     [
-                        html.H5(id='grade-label'),
+                        html.H5(id="grade-label"),
                         dcc.Dropdown(
                             id="year-dropdown",
                             options=[
-                                {"label": translations['en']['grades'][year], "value": year}
+                                {
+                                    "label": translations["en"]["grades"][year],
+                                    "value": year,
+                                }
                                 for year in df["Year"].unique()
                             ],
                             value=df["Year"].unique()[0],
                             clearable=False,
-                            style={"width": "200px"}
+                            style={"width": "100%"},
                         ),
                     ],
-                    width=2,
-                    style={"margin-bottom": "10px", "margin-right":"10px"},
-                    className="mt-4"
+                    xs=12,
+                    sm=4,
+                    md=4,
+                    lg=2,
+                    className="mt-4",
                 ),
                 dbc.Col(
-                    [
-                        dbc.Card(
-                            [
-                                dbc.CardBody(
-                                    [
-                                        html.Div(
-                                            [
-                                                html.Img(
-                                                    id="student-image",
-                                                    style={
-                                                        "width": "150px",
-                                                        "height": "150px",
-                                                        "display": "block",
-                                                        "margin-top": "10px",
-                                                    },
-                                                    className="mt-4"
-                                                ),
-                                                html.H4(
-                                                    id="average-grade",
-                                                    className="card-title",
-                                                    style={"textAlign": "center"},
-                                                ),
-                                            ],
-                                            style={
-                                                "display": "flex",
-                                                "flexDirection": "column",
-                                                "AlignItems": "center",
-                                            },
-                                        )
-                                    ]
-                                )
-                            ],
-                            style={
-                                "width": "200px",
-                                "height": "200px",
-                                "display": "flex",
-                                "AlignItems": "center",
-                                "justifyContent": "center",
-                            },
-                        )
-                    ],
-                    width=2,
-                    style={"marginLeft": "auto", "border": "none"},
-                    className="mt-4"
+                    dbc.Card(
+                        dbc.CardBody(
+                            html.Div(
+                                [
+                                    html.Img(
+                                        id="student-image",
+                                        style={
+                                            "width": "100%",
+                                            "height": "auto",
+                                            "display": "block",
+                                            "object-fit": "cover",  # Ensure the image is square
+                                        },
+                                        className="mt-4 d-none d-md-block"
+                                    ),
+                                    html.H4(
+                                        id="average-grade",
+                                        className="card-title text-center mt-3",
+                                    ),
+                                ],
+                                style={
+                                    "display": "flex",
+                                    "flexDirection": "column",
+                                    "alignItems": "center",
+                                },
+                            )
+                        ),
+                        style={
+                            "width": "100%",
+                            "height": "100%",
+                            "display": "flex",
+                            "alignItems": "center",
+                            "justifyContent": "center",
+                        },
+                    ),
+                    xs=12,
+                    sm=12,
+                    md=4,
+                    lg=2,
+                    className="mt-4 mb-4"
                 ),
             ],
-            className="align-items-start",
+            className="justify-content-center align-items-center"
         ),
         dbc.Row(
             [
@@ -394,7 +456,7 @@ app.layout = dbc.Container(
             [
                 dbc.Col(dcc.Graph(id="subject-performance-chart"), width=12),
             ],
-            className="mb-4",
+            className="mb-4"
         ),
         dbc.Row(
             [
@@ -408,13 +470,16 @@ app.layout = dbc.Container(
                             ],
                             value=subjects[0],
                             clearable=False,
-                            style={"width": "200px"}
+                            style={"width": "100%"}
                         ),
                     ],
-                    width=2,
+                    xs=12,
+                    sm=6,
+                    md=4,
+                    lg=2,
+                    className="mb-4"
                 )
-            ],
-            className="mb-4",
+            ]
         ),
         dbc.Row(
             [
@@ -430,11 +495,15 @@ app.layout = dbc.Container(
                         style_cell={"textAlign": "center"},
                     ),
                     width=12,
-                    className="mb-4",
+                    className="mb-4"
                 )
             ]
         ),
-        dbc.Row([dbc.Col(dcc.Graph(id="performance-over-time"), width=12)]),
+        dbc.Row(
+            [
+                dbc.Col(dcc.Graph(id="performance-over-time"), width=12)
+            ]
+        ),
     ],
     fluid=True,
     style={"max-width": "1200px"},
@@ -454,7 +523,6 @@ def update_year_dropdown(language):
 @app.callback(
     [Output('student-label', 'children'),
      Output('dashboard-title', 'children'),
-     Output('grading-scale', 'children'),
      Output('grade-label', 'children'),
      Output('subject-label', 'children'),
      Output('summary-table', 'columns'),
@@ -473,7 +541,6 @@ def update_labels_and_card(language, selected_student):
 
     return (translation['student_selection'],
             translation['student_performance_dashboard'],
-            translation['grading_scale'],
             translation['grade_selection'],
             translation['subject'],
             columns,
@@ -557,7 +624,7 @@ def update_performance_chart(selected_student, selected_year, selected_subject, 
         line_shape='spline',  # Smooth the lines
     )
     
-        # Customize line color and style
+    # Customize line color and style
     fig.update_traces(line=dict(color='black', width=4), marker=dict(symbol='x', size=10, color='red'))
     
     fig.add_shape(
@@ -612,6 +679,7 @@ def update_subject_performance_chart(selected_student, selected_year, language):
     )
     
     return fig
+
 
 # Run the app
 if __name__ == "__main__":
